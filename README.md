@@ -7,7 +7,8 @@ But using flocking however is a bit too loose when you want to have a clear stru
 The way how I wanted to do it myself was a bit simplified. All units will pick out an offset when it comes to arriving to the spot. The units who are the furthest away from the clicked position will get to choose the offset which is closest to them. This way I can fill all of them in without them running into each other trying to walk to an obstructed path.
 
 # How it is supposed to work according to my research
-
+According to the research dividing it in smaller groups that work together. It makes it easier to move through terrain as you are moving towards a point.
+Also makes it so that you can move towards a location that is partially obstructed and where your legion has to make way for obstacles.
 
 # Framework
 I used the Unity framework and converted the steering behaviors from the Elite framework given by our school (Digital Arts and Entertainment: https://www.digitalartsandentertainment.be/) in our Gameplay Programming to fit the unity framework.

@@ -7,10 +7,14 @@ public class WanderBehavior : SeekBehavior
 {
     private float m_OffsetDistance = 6.0f;
     [SerializeField]
-    private float m_Radius = 4.0f;
+    protected float m_Radius = 4.0f;
     private const float m_MaxAngleChange = 45 * Mathf.Deg2Rad;
     
     private float m_WanderAngle = 0.0f;
+
+    public WanderBehavior()
+    {
+    }
 
     public override SteeringOutput CalculateSteering(SteeringAgent agent)
     {

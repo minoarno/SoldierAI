@@ -10,10 +10,14 @@ public struct SteeringOutput
 }
 
 [System.Serializable]
-public class SteeringBehavior : MonoBehaviour
+public class SteeringBehavior
 {
     [SerializeField]
-    protected Vector3 m_Target = new Vector3(0, 0, 0);
+    protected Vector3 m_Target = Vector3.zero;
+
+    public SteeringBehavior()
+    {
+    }
 
     // Update is called once per frame
     public virtual SteeringOutput CalculateSteering(SteeringAgent agent)

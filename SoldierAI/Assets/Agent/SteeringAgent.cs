@@ -5,23 +5,26 @@ using UnityEngine;
 public class SteeringAgent : MonoBehaviour
 {
     [SerializeField]
-    private Color m_Color = new Color(0f,0f,0f);
+    protected Color m_Color = new Color(0f, 0f, 0f);
 
     [SerializeField]
-    private float m_MaxLinearSpeed = 20f;
+    protected float m_MaxLinearSpeed = 20f;
 
     [SerializeField]
-    private Vector3 m_Velocity = new Vector3(0,0,0);
+    protected Vector3 m_Velocity = new Vector3(0, 0, 0);
+
+    protected SteeringBehavior m_SteeringBehavior = null;
 
     [SerializeField]
-    private SteeringBehavior m_SteeringBehavior = null;
+    protected Rigidbody m_RigidBody = null;
 
-    [SerializeField]
-    private Rigidbody m_RigidBody = null;
+    bool m_IsEnabled = false;
 
     // Start is called before the first frame up = nulldate
     void Start()
     {
+        m_SteeringBehavior = new WanderBehavior();
+
         Color color = new Color(Random.Range(0, 1f), Random.Range(0, 1f), Random.Range(0, 1f));
         foreach (Renderer renderer in gameObject.GetComponentsInChildren<Renderer>())
         {
@@ -32,16 +35,23 @@ public class SteeringAgent : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (m_SteeringBehavior != null)
+        if (m_IsEnabled)
         {
-            SteeringOutput output = m_SteeringBehavior.CalculateSteering(this);
+            if (m_SteeringBehavior != null)
+            {
+                SteeringOutput output = m_SteeringBehavior.CalculateSteering(this);
 
-            Vector3 steeringForce = output.LinearVelocity - m_Velocity;
-            m_Velocity = (m_Velocity + steeringForce);
-            m_Velocity.Normalize();
+                Vector3 steeringForce = output.LinearVelocity - m_Velocity;
+                m_Velocity = (m_Velocity + steeringForce);
+                m_Velocity.Normalize();
+            }
+            //transform.position += m_Velocity;
+            m_RigidBody.velocity = m_Velocity * Time.fixedDeltaTime * m_MaxLinearSpeed;
         }
-        //transform.position += m_Velocity;
-        m_RigidBody.velocity = m_Velocity * Time.fixedDeltaTime * m_MaxLinearSpeed;
+        else
+        {
+            m_RigidBody.velocity = Vector3.zero;
+        }
     }
 
     public Vector3 GetPosition()
@@ -59,8 +69,34 @@ public class SteeringAgent : MonoBehaviour
         return m_Velocity;
     }
 
-    public void SetSteeringBehavior(SteeringBehavior behavior)
+    public void SetSteeringBehavior(SteeringBehavior behavior, int index)
     {
+        if (behavior == null)
+        {
+            Debug.LogError("NULL");
+        }
         m_SteeringBehavior = behavior;
+        m_IsEnabled = false;
+        Invoke("Enable", index);
+    }
+
+    private void Enable()
+    {
+        m_IsEnabled = true;
+    }
+
+    public void SetTarget(Vector3 newTarget)
+    {
+        m_SteeringBehavior.SetTarget(newTarget);
+    }
+
+    public Vector3 GetTarget()
+    {
+        return m_SteeringBehavior.GetTarget();
+    }
+
+    public Color GetColor()
+    {
+        return m_Color;
     }
 }

@@ -5,10 +5,8 @@ using UnityEngine;
 [System.Serializable]
 public class SeekBehavior : SteeringBehavior
 {
-    // Update is called once per frame
-    public void Update()
+    public SeekBehavior()
     {
-        
     }
 
     public override SteeringOutput CalculateSteering(SteeringAgent agent)

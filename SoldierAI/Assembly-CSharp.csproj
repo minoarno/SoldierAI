@@ -60,9 +60,9 @@
     <Compile Include="Assets\Flocking\TheFlock.cs" />
     <Compile Include="Assets\Agent\SteeringAgent.cs" />
     <Compile Include="Assets\Agent\Steering Behaviors\WanderBehavior.cs" />
-    <Compile Include="Assets\Agent\Steering Behaviors\SeekBehavior.cs" />
     <Compile Include="Assets\Agent\LegionAgent.cs" />
     <Compile Include="Assets\Gizmos\TextGizmo.cs" />
+    <Compile Include="Assets\Agent\Steering Behaviors\SeekBehavior.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

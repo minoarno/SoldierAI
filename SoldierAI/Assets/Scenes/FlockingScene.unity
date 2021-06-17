@@ -153,10 +153,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_AgentTemplate: {fileID: 4424180787142667223, guid: 2c53e4185ef100e469f6e6213b2059b0, type: 3}
-  m_AmountOfAgents: 9
+  m_AmountOfAgents: 69
   m_Agents: []
   m_Weight: 0
-  m_RowsLegion: 3
+  m_RowsLegion: 13
   m_Offset: 2
 --- !u!4 &53679474
 Transform:

@@ -69,7 +69,7 @@ public class SteeringAgent : MonoBehaviour
         return m_Velocity;
     }
 
-    public void SetSteeringBehavior(SteeringBehavior behavior, int index)
+    public void SetSteeringBehavior(SteeringBehavior behavior, int delay =0)
     {
         if (behavior == null)
         {
@@ -77,7 +77,7 @@ public class SteeringAgent : MonoBehaviour
         }
         m_SteeringBehavior = behavior;
         m_IsEnabled = false;
-        Invoke("Enable", index);
+        Invoke("Enable", delay);
     }
 
     private void Enable()

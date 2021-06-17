@@ -7,7 +7,7 @@ public class TheFlock : MonoBehaviour
     [SerializeField]
     GameObject m_AgentTemplate = null;
     [SerializeField]
-    int m_AmountOfAgents = 20;
+    int m_AmountOfAgents = 0;
     [SerializeField]
     List<LegionAgent> m_Agents = null;
 
@@ -26,6 +26,7 @@ public class TheFlock : MonoBehaviour
     static Vector3 m_Hitpoint;
 
     List<List<bool>> m_LegionLayout;
+    bool m_HasFormed = false;
 
     // Start is called before the first frame update
     void Start()
@@ -39,7 +40,13 @@ public class TheFlock : MonoBehaviour
             if (agent)
             {
                 m_Agents.Add(agent);
+                agent.gameObject.name = i.ToString();
             }
+        }
+
+        if (m_AmountOfAgents > m_RowsLegion * m_CollumsLegion)
+        {
+            m_CollumsLegion++;
         }
 
         m_LegionLayout = new List<List<bool>>();
@@ -83,8 +90,7 @@ public class TheFlock : MonoBehaviour
 
     public void FillInTheGrid()
     {
-        Debug.Log("Filling the grid");
-        Vector3 halfTheSize = new Vector3(m_Offset * (m_CollumsLegion / 2f), 0, m_Offset * (m_RowsLegion / 2f));
+        Vector3 halfTheSize = new Vector3(m_Offset * (m_CollumsLegion * 0.5f), 0, m_Offset * (m_RowsLegion * 0.5f));
         Vector3 vec = m_Hitpoint - halfTheSize;
         
         m_Agents.Sort(SortByDistance);
@@ -105,6 +111,8 @@ public class TheFlock : MonoBehaviour
                 }
             }
 
+            if (m_HasFormed == false)
+            {
                 for (int r = 0; r < m_RowsLegion; r++)
                 {
                     for (int c = 0; c < m_CollumsLegion; c++)
@@ -112,17 +120,16 @@ public class TheFlock : MonoBehaviour
                         if (m_LegionLayout[r][c] == false)
                         {
                             float distanceToGridPoint = Vector3.Distance(m_Agents[i].GetPosition(), new Vector3(vec.x + c * m_Offset, vec.y, vec.z + r * m_Offset));
-                            if (closestDistance.CompareTo(distanceToGridPoint) > 0)
+                            if (closestDistance > distanceToGridPoint)
                             {
                                 closestDistance = distanceToGridPoint;
                                 closestCol = c;
                                 closestRow = r;
                             }
                         }
-
                     }
                 }
-            
+            }
             
             m_LegionLayout[closestRow][closestCol] = true;
             m_Agents[i].SetCurrentCol(closestCol);
@@ -132,19 +139,25 @@ public class TheFlock : MonoBehaviour
 
             SeekBehavior seek = new SeekBehavior();
             seek.SetTarget(target);
-            m_Agents[i].SetSteeringBehavior(seek,i);
+            m_Agents[i].SetSteeringBehavior(seek);       
         }
+
+        if (!m_HasFormed) m_HasFormed = true;
     }
 
     void OnDrawGizmos()
     {
-        Vector3 vec = m_Hitpoint - new Vector3(m_Offset * (m_RowsLegion / 2f), 0, m_Offset * (m_CollumsLegion / 2f));
+        Vector3 vec = m_Hitpoint - new Vector3(m_Offset * (m_RowsLegion * 0.5f), 0, m_Offset * (m_CollumsLegion * 0.5f));
 
-        for (int i = 0; i < m_AmountOfAgents; i++)
+        if (m_Agents.Count > 1)
         {
-            Gizmos.color = m_Agents[i].GetColor();
-            Gizmos.DrawLine(m_Agents[i].GetPosition(), m_Agents[i].GetTarget());
+            for (int i = 0; i < m_AmountOfAgents; i++)
+            {
+                Gizmos.color = m_Agents[i].GetColor();
+                Gizmos.DrawLine(m_Agents[i].GetPosition(), m_Agents[i].GetTarget());
+            }
         }
+
     }
 
     static int SortByDistance(SteeringAgent a1, SteeringAgent a2)
@@ -152,5 +165,6 @@ public class TheFlock : MonoBehaviour
         float distanceToPointA1 = Vector3.Distance(m_Hitpoint, a1.GetPosition());
         float distanceToPointA2 = Vector3.Distance(m_Hitpoint, a2.GetPosition());
         return distanceToPointA1.CompareTo(distanceToPointA2) * -1;
+        //return distanceToPointA1.CompareTo(distanceToPointA2);
     }
 }
